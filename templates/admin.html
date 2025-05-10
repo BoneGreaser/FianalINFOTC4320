@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block title %}Admin Page{% endblock %}
+
+{% block content %}
+<h2>Administration Page</h2>
+
+{% if not logged_in %}
+    <h3>Admin Login</h3>
+    <form method="POST">
+        {% if error_message %}
+            <p class="error">{{ error_message }}</p>
+        {% endif %}
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required>
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required>
+        <button type="submit">Login</button>
+    </form>
+{% else %}
+    <h3>Seating Chart</h3>
+    <table border="1">
+        {% for row in seating_chart %}
+        <tr>
+            {% for seat in row %}
+            <td style="text-align: center;">{{ seat }}</td>
+            {% endfor %}
+        </tr>
+        {% endfor %}
+    </table>
+
+    <h3>Total Seat Sales: ${{ total_sales }}</h3>
+
+    <h3>Reservations</h3>
+    <pre>
+    {% for reservation in reservations %}
+    {{ reservation.format_reservation() }}
+    <form action="{{ url_for('delete_reservation', reservation_id=reservation.id) }}" method="POST" style="display: inline;">
+        <button type="submit" style="color: rgb(207, 43, 43);">DELETE RESERVATION</button>
+    </form>
+    {% endfor %}
+    </pre>
+{% endif %}
+{% endblock %}

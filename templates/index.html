@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<h1>Welcome to the IT-4320 Reservation System. Select an option from the box below to get started.</h1>
+<form action="/" method="POST">
+    <label for="report">Choose a Menu Option:</label>
+    <select name="report" id="report">
+        <option value="admin">Admin Page</option>
+        <option value="reservation">Reservation Page</option>
+    </select>
+    <button type="submit">Go</button>
+</form>
+{% endblock %}
+
+

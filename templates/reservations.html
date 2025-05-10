@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% block title %}Reservation Page{% endblock %}
+
+{% block content %}
+<h2>Seating Chart</h2>
+<table border="1" style="border-collapse: collapse; margin: auto; width: 50%;">
+    {% for row in seating_chart %}
+    <tr>
+        {% for seat in row %}
+        <td style="text-align: center; width: 50px; height: 50px; font-weight: bold; color: {% if seat == 'X' %}red{% else %}black{% endif %};">
+            {{ seat }}
+        </td>
+        {% endfor %}
+    </tr>
+    {% endfor %}
+</table>
+
+<h2>Make a Reservation</h2>
+<form method="POST">
+    <label for="first_name">First Name:</label>
+    <input type="text" id="first_name" name="first_name" required>
+    <br>
+    <label for="last_name">Last Name:</label>
+    <input type="text" id="last_name" name="last_name" required>
+    <br>
+    <label for="seat_row">Choose a Row:</label>
+    <select id="seat_row" name="seat_row" required>
+        <option value="" disabled selected>Select a row</option>
+        {% for row in available_rows %}
+        <option value="{{ row }}">{{ row + 1 }}</option>
+        {% endfor %}
+    </select>
+    <br>
+    <label for="seat_column">Choose a Seat:</label>
+    <select id="seat_column" name="seat_column" required>
+        <option value="" disabled selected>Select a seat</option>
+    </select>
+    <br>
+    <button type="submit">Reserve</button>
+</form>
+
+<script>
+    //
+    const availableSeats = {{ available_seats | safe }};
+    const seatRowSelect = document.getElementById('seat_row');
+    const seatColumnSelect = document.getElementById('seat_column');
+
+    seatRowSelect.addEventListener('change', function () {
+        const selectedRow = parseInt(this.value);
+        seatColumnSelect.innerHTML = '<option value="" disabled selected>Select a seat</option>';
+        if (availableSeats[selectedRow]) {
+            availableSeats[selectedRow].forEach(function (seat) {
+                const option = document.createElement('option');
+                option.value = seat;
+                option.textContent = seat + 1;
+                seatColumnSelect.appendChild(option);
+            });
+        }
+    });
+</script>
+{% endblock %}
